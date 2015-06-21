@@ -1,0 +1,39 @@
+{
+  "coord": {
+    "lon": 26.25,
+    "lat": 50.62
+  },
+  "sys": {
+    "message": 0.0116,
+    "country": "UA",
+    "sunrise": 1434852143,
+    "sunset": 1434911474
+  },
+  "weather": [
+    {
+      "id": 804,
+      "main": "Clouds",
+      "description": "overcast clouds",
+      "icon": "04n"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 13.893,
+    "temp_min": 13.893,
+    "temp_max": 13.893,
+    "pressure": 1001.29,
+    "sea_level": 1027.82,
+    "grnd_level": 1001.29,
+    "humidity": 74
+  },
+  "wind": {
+    "speed": 3.66,
+    "deg": 271.004
+  },
+  "clouds": {"all": 88},
+  "dt": 1434917146,
+  "id": 695594,
+  "name": "Rivne",
+  "cod": 200
+}
