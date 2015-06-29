@@ -1,8 +1,11 @@
 package com.makswell.max.sunshine;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -29,8 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -57,19 +58,10 @@ public class ForecastFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String[] forecastArray = {
-                "Today - Sunny - 24/14",
-                "Tomorrow - Sunny - 24/14",
-                "Tuesday - Sunny - 24/14",
-                "Wensday - Sunny - 24/14"
-        };
-
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
-
         mForecastAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                weekForecast);
+                new ArrayList<String>());
 
         ListView listView = (ListView)rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
@@ -86,10 +78,21 @@ public class ForecastFragment extends Fragment {
 
                 Toast toast = Toast.makeText(getActivity(), text, duration);//
                 toast.show();
+
+                // make intent
+                Intent go2details = new Intent(getActivity(), DetailActivity.class);
+                go2details.putExtra(Intent.EXTRA_TEXT, text);
+                startActivity(go2details);
             }
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
     @Override
@@ -102,13 +105,22 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_refresh){
-            FetchWeatherTask weatherTask = new FetchWeatherTask();
-//            weatherTask.execute("50.6172","26.2452");
-            weatherTask.execute("33001");
+            updateWeather();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void updateWeather() {
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+//            weatherTask.execute("50.6172","26.2452");
+        weatherTask.execute(location);
+    }
+
+
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
